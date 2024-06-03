@@ -41,11 +41,11 @@ fork 本仓库并开通 Gitee go 服务。
 
 而后切换到 fork 后仓库的流水线页面：
 
-![](img/kaitong.jpg)
+![](resource/kaitong.jpg)
 
 点击”开通 Gitee GO“来使用 CI。
 
-![](img/chuagjian.jpg)
+![](resource/chuagjian.jpg)
 
 是否创建默认流水线建议选择“不创建”。
 
@@ -145,7 +145,7 @@ make test-exercise-xx
 
 完成实验后，请上传至远程仓库运行 CI。详细执行情况与输出可在流水线页面查看。
 
-![](img/jeiguo.jpg)
+![](resource/jeiguo.jpg)
 
 最终的结果可在训练营网站查看：
 
