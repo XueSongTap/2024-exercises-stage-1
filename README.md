@@ -27,6 +27,136 @@
 | 41   | `src/exercise-41` | 使用 RISC-V 内联汇编实现最大公因数求解     | RISC-V 基础指令 | 基础 |
 | 42   | `src/exercise-42` | 使用 RISC-V 内联汇编实现数组元素查找       | RISC-V 基础指令 | 中等 |
 
+## 使用教程
+
+### step0
+
+**请确保已在训练营网站个人信息中正确填写了 Gitee Username**
+
+### step1
+
+fork 本仓库并开通 Gitee go 服务。
+
+首先 fork 本仓库到自己的 Gitee 下。
+
+而后切换到 fork 后仓库的流水线页面：
+
+![](img/kaitong.jpg)
+
+点击”开通 Gitee GO“来使用 CI。
+
+![](img/chuagjian.jpg)
+
+是否创建默认流水线建议选择“不创建”。
+
+*注：开通 Gitee go 后流水线页面显示无流水线为正常现象*
+
+### step2
+
+将远程仓库 clone 到本地或者使用 webIDE 进行实验
+
+项目结构
+
+```shell
+.
+├── build
+├── CMakeLists.txt
+├── COPYING
+├── img
+├── Makefile
+├── README.en.md
+├── README.md
+├── src//习题在此
+└── test
+```
+
+本地需要配置部分环境，Ubuntu/Debain 配置参考如下
+
+```shell
+sudo apt install git opensbi u-boot-qemu sshpass openssh-client jq curl qemu-system-misc
+```
+
+验证 qemu 是否配置成功
+
+```shell
+qemu-system-riscv64 --version
+```
+
+而后拉取交叉编译工具链镜像
+
+```shell
+git clone https://isrc.iscas.ac.cn/gitlab/learningeulixos/2024-exercises-virtual-machines.git
+```
+
+通过 qemu 启动工具链与测试环境
+
+```shell
+qemu-system-riscv64 \
+    -machine 'virt' \
+    -cpu 'rv64' \
+    -m 1G \
+    -device virtio-blk-device,drive=hd \
+    -drive file=qcow2镜像路径,if=none,id=hd \
+    -virtfs local,id=lee,path=实验工程路径,mount_tag=lee,security_model=passthrough \
+    -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf \
+    -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
+    -object rng-random,filename=/dev/urandom,id=rng \
+    -device virtio-rng-device,rng=rng \
+    -nographic \
+    -append "root=LABEL=rootfs console=ttyS0"
+
+```
+
+qemu 启动后进行测试
+
+实验被挂载到 /lee 目录下，需要切换目录进行测试
+
+```shell
+cd /lee
+```
+
+使用 GNU Make 进行构建。
+
+``` shell
+# 构建所有（exercise-xx）。
+make all
+# 构建一个或多个 exercise，比如，exercise-01, exercise-02。
+make exercise-xx # 
+```
+
+清除产物：
+
+```shell
+make clean
+```
+
+测试
+
+```shell
+# 运行所有测试
+make test
+# 运行一个或多个测试，比如，test-exercise-01, test-exercise-02。
+make test-exercise-xx
+```
+
+测试完成后可退出按 ctrl+A 然后按 X 退出 qemu
+
+### step3
+
+完成实验后，请上传至远程仓库运行 CI。详细执行情况与输出可在流水线页面查看。
+
+![](img/jeiguo.jpg)
+
+最终的结果可在训练营网站查看：
+
+https://opencamp.cn/EulixOS/camp/202401/stage/1?tab=rank
+
+关于 Gitee go 的介绍：
+
+[Gitee Go 2.0 - Gitee.com](https://gitee.com/help/categories/69)
+
+
+
 ## 构建
 
 使用 GNU Make 进行构建。
