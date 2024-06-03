@@ -23,7 +23,6 @@ stages:
       - step: execute@docker
         name: execute_by_docker
         displayName: docker build
-        certificate: gitlab-docker
         image: docker.io/yuchanns/qemu-system-riscv64:ubuntu22.04-gdb2022.04.12
         command:
           - sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list
