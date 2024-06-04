@@ -6,7 +6,6 @@ MEMORY {
 
 
 SECTIONS {
-    /* >>> 在这里指定 `.text` 的起始地址为 `0x1000` */
     .text : {
         *(.text)
         /* 其他段的定义 */
