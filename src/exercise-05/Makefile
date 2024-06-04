@@ -1,7 +1,7 @@
 CC ?= gcc
 
 CFLAGS	= -std=c11 -Wall -Wextra -Wpedantic -Werror -g
-LDFLAGS = -Wl,--as-needed -Wl,--no-undefined # -fsanitize=address -fsanitize=undefined
+LDFLAGS = -Wl,--as-needed -Wl,--no-undefined
 
 OUTPUT_DIR ?= .
 
