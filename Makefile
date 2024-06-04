@@ -7,7 +7,7 @@ TEST_DIR    := test
 CC ?= gcc
 
 CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Werror -g
-LDFLAGS = -Wl,--as-needed -Wl,--no-undefined -fsanitize=address -fsanitize=undefined
+LDFLAGS = -Wl,--as-needed -Wl,--no-undefined
 
 EXERCISES := $(shell find $(SRC_DIR) -type d -name 'exercise-*' -exec basename {} \;)
 
