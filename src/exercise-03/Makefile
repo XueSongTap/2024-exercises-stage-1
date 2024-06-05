@@ -18,12 +18,16 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	# 在这里指定 TARGET 的构建命令
+	$(CC) $(LDFLAGS) -o $@ $^
+
 
 $(TEST_TARGET): $(TEST_OBJS)
 	# 在这里指定 TEST_TARGET 的构建命令
+	$(CC) $(LDFLAGS) -o  $@ $^
 
 %.o: %.c
 	# 在这里指定所有 C 文件的编译命令
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
