@@ -26,18 +26,24 @@ $(OUTPUT_DIR):
 
 $(LIB_OBJ): $(LIB_SRC)
 	# 在这里指定如何编译 libfunctions.o
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 
 $(LIB_TARGET): $(LIB_OBJ)
 	# 在这里指定如何生成 libfunctions.so
+	$(CC) -shared -o $@ $^
 
 $(TARGET): $(OBJS) $(LIB_TARGET)
 	# 在这里指定如何链接 libfunctions.so 来生成 TARGET
+	$(CC) $(LDFLAGS) -o $@ $^ $(RPATH) -L$(OUTPUT_DIR) -lfunctions
 
 $(TEST_TARGET): $(TEST_OBJS) $(LIB_TARGET)
 	# 在这里指定如何链接 libfunctions.so 来生成 TEST_TARGET
+	$(CC) $(LDFLAGS) -o $@ $^ $(RPATH) -L$(OUTPUT_DIR) -lfunctions
 
 %.o: %.c
 	# 在这里指定如何编译所有 C 文件
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 test: $(TEST_TARGET)
 	$(TEST_TARGET)
