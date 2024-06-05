@@ -1,6 +1,6 @@
 MEMORY {
     /* >>> 在这里定义内存区域，设置内存区域起始地址为 `0x8000000`，长度为 `0x2000`。 */
-
+    RAM (rwx) : ORIGIN = 0x8000000, LENGTH = 0x2000
     /* <<< */
 }
 
@@ -22,8 +22,11 @@ SECTIONS {
         *(.bss)
     } > RAM
 
-    /* >>> 在这里添加 my_custom_sectoin，并在其内放置 `my_custom_data`，地址设置 0x1234 。*/
-
+    /* >>> 在这里添加 my_custom_section，并在其内放置 `my_custom_data`，地址设置 0x1234 。*/
+    my_custom_section 0x1234 : {
+        my_custom_data = .;
+        *(.my_custom_data)
+    } > RAM
     /* <<< */
 
 
