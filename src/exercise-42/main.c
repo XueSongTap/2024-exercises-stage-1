@@ -10,22 +10,21 @@ find_value (int *arr, int n, int target, int start_index)
 
   // >>> 替换 PLACEHOLDER 为合适的指令完成注释的功能
   __asm__ volatile (
-      // 检查起始索引是否超出数组范围
-      "PLACEHOLDER\n\t" // 如果起始索引 start_index >= n，则跳转到
-                        // out_of_range 标签
+      // 检查起始索引是否超出数组范围 
+      "bge %4, %2, out_of_range\n\t" // 如果 start_index >= n，则跳转到 out_of_range 标签
       "blt %4, x0, out_of_range\n\t" // 如果起始索引 start_index < 0，则跳转到
                                      // out_of_range 标签
       // 用于循环计数的寄存器
       "li t0, 0\n\t"
       "sub t3,%2,%4\n\t"
       // 将 start_index 乘以 4（整数大小）保存到t2寄存器
-      "PLACEHOLDER\n\t"
+      "slli t2, %4, 2\n\t"
       "add %1, %1, t2\n\t" // 将计算的偏移量添加到数组指针中
       "loop:\n\t"
       // 使用 load 指令将 arr[i] 加载到 t1 寄存器
       "lw t1, 0(%1)\n\t"
       // 比较 arr[i] 和目标值
-      "PLACEHOLDER\n\t" // 如果 arr[i] == target，则跳转到 found 标签
+      "beq t1, %3, found\n\t" // 如果 arr[i] == target，则跳转到 found 标签
       "bne t0, t3, next\n\t" // 如果循环计数 t0 != n，则跳转到 next 标签
       "jal x0, out_of_range\n\t" // 否则跳转到 out_of_range 标签
       "found:\n\t"
@@ -48,7 +47,7 @@ find_value (int *arr, int n, int target, int start_index)
       : "r"(arr), "r"(n), "r"(target), "r"(start_index)
       : "t0", "t1", "t2", "t3");
 
-#<<<
+//<<<
   return index;
 }
 
