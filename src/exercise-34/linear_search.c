@@ -21,7 +21,11 @@ linear_search (int arr[], int size, int target)
   int i;
 
   // >>> 在这里编写功能，返回匹配的索引
-
+  for (i = 0;i < size; ++ i) {
+    if (arr[i] == target){
+      return i;
+    }
+  }
   // <<<
 
   return -1;

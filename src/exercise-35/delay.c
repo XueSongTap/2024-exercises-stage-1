@@ -6,7 +6,8 @@ static int __init
 delay_init (void)
 {
   // >>> 在这里编写延时功能，并打印 Delay 2s!
-
+  msleep(2000);  // 延时2秒
+  printk (KERN_INFO "Delay 2s!\n");
   // <<<
   return 0;
 }
