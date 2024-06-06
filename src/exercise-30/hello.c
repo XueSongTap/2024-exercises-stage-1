@@ -10,6 +10,7 @@ hello_init (void)
 {
 
   // >>> 在这里编写如何使用打印函数 输出 hello world!
+  printk (KERN_INFO "hello world!\n");
 
   // <<<
 
@@ -26,6 +27,7 @@ hello_exit (void)
 {
 
   // >>> 在这里编写如何使用打印函数输出 exit world!
+  printk (KERN_INFO "exit world!\n");
 
   // <<<
 }

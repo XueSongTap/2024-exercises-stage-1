@@ -45,9 +45,15 @@ reverse_task_queue_by_group (TaskNode *head, int k)
           if (tail == NULL)
             {
               // 在这里填写代码
+              return hair -> next;
             }
         }
-
+      //创建一个虚拟头节点 hair，其 next 指向原链表的头节点。
+      // 使用 pre 指针标记翻转前的节点。
+      // 遍历链表，每次移动 k 个节点并翻转这段链表。
+      // 翻转后的段首与 pre 相连，段尾与下一段相连。
+      // 更新 pre 和 head，继续下一段翻转。
+      // 返回新的头节点。
       TaskNode *next = tail->next;
       TaskNode *prev = tail->next;
       TaskNode *p = head;
@@ -56,12 +62,15 @@ reverse_task_queue_by_group (TaskNode *head, int k)
         {
           TaskNode *temp = p->next;
           // 在这里填写代码
+          p -> next = prev;
+          prev = p;
+          p = temp;
         }
 
       pre->next = tail;
 
       // 在这里填写代码
-
+      pre = head;
       head = next;
     }
 

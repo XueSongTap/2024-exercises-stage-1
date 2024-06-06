@@ -32,6 +32,13 @@ merge_task_queues (TaskNode *a, TaskNode *b)
        * 在这里比较 task_id 以调整合并后任务队列的顺序。
        *
        */
+      if (a_ptr->task_id < b_ptr->task_id) {
+          tail->next = a_ptr;
+          a_ptr = a_ptr->next;
+      } else {
+          tail->next = b_ptr;
+          b_ptr = b_ptr->next;
+      }
       tail = tail->next;
     }
 
