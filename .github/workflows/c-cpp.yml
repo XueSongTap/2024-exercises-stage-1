@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+      - name: Pull Docker Image
+        run: docker pull docker.io/yuchanns/qemu-system-riscv64:ubuntu22.04-gdb2022.04.12
+
+      - name: Run QEMU and Test
+        run: |
+          sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y git opensbi u-boot-qemu sshpass openssh-client jq curl
+          git clone https://isrc.iscas.ac.cn/gitlab/learningeulixos/2024-exercises-virtual-machines.git
+          echo "clone success"
+          cd 2024-exercises-virtual-machines
+          docker run -d --name qemu-system-riscv64 -v $(pwd):/workspace -w /workspace docker.io/yuchanns/qemu-system-riscv64:ubuntu22.04-gdb2022.04.12 sh -c "\
+            qemu-system-riscv64 -machine 'virt' -cpu 'rv64' -m 1G -device virtio-blk-device,drive=hd -drive file=stage-1.qcow2,if=none,id=hd -device virtio-net-device,netdev=net -netdev user,id=net,hostfwd=tcp::2222-:22 -virtfs local,id=lee,path=/workspace,mount_tag=lee,security_model=passthrough -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf -object rng-random,filename=/dev/urandom,id=rng -device virtio-rng-device,rng=rng -append 'root=LABEL=rootfs console=ttyS0' -display none -daemonize \
+            && sleep 120 \
+            && sshpass -p 'root' ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost 'chmod -R +x /lee/test' \
+            && sshpass -p 'root' ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost 'make -C /lee' \
+            && sshpass -p 'root' ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost 'make -C /lee test' \
+            && sshpass -p 'root' scp -P 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost:/lee/result/report.json /workspace/report.json"
+
+      - name: Process Report
+        run: |
+          gitee_id="${{ github.actor }}"
+          json_file="report.json"
+          existing_json=$(cat "$json_file")
+          updated_json=$(echo "$existing_json" | jq --arg gitee_id "$gitee_id" '.name = $gitee_id')
+          echo "$updated_json" > "$json_file"
+          cat report.json
+          curl -X POST "${{ secrets.POST_API }}" -H "accept: application/json;charset=utf-8" -H "Content-Type: application/json" -d "$(cat report.json)" -v
